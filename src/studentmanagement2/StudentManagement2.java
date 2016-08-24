@@ -7,6 +7,8 @@ public class StudentManagement2 {
     public static School school = new School("Bogus");
     public static InterfaceOption openMainMenuOption;
     public static InterfaceOption loadStudentDataOption;
+    public static InterfaceOption registerModuleOption;
+    public static InterfaceOption enterStudentSpecificOption;
 
     public static Interface mainMenuInterface;
 
@@ -23,7 +25,18 @@ public class StudentManagement2 {
             }
         }
         );
-
+        registerModuleOption = new InterfaceOption("Register Module", new Runnable() {
+            @Override
+            public void run() {
+                registerModule();
+            }
+        });
+        enterStudentSpecificOption = new InterfaceOption("Enter Student Specific", new Runnable() {
+            @Override
+            public void run() {
+                enterStudentSpecific();
+            }
+        });
         mainMenuInterface = new Interface("Main Menu");
         mainMenuInterface.addOption(loadStudentDataOption);
     }
@@ -36,6 +49,23 @@ public class StudentManagement2 {
             Student s = new Student(str);
             school.students.add(s);
         }
+    }
+
+    public static void registerModule() {
+        String moduleCode = Debug.getString("Please enter Module Code for the new module.");
+        if (school.getModule(moduleCode) == null) {
+            String moduleName = Debug.getString("Please enter module name.");
+            Module m = new Module(moduleCode, moduleName);
+            school.addModule(m);
+            Debug.LogInfo(m.toString() + " is successfully added!");
+        } else {
+            Debug.LogError("Module with this code already exist");
+        }
+    }
+
+    public static void enterStudentSpecific() {
+        String moduleCode = Debug.getString("for the sake of simplicity, please enter a module code for all student");
+
     }
 
     public static void openMainMenu() {
