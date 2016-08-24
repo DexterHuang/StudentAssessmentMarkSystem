@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 public class SearchableClass implements Serializable {
 
-    public int getID() {
-        return - 1;
+    public String getID() {
+        return null;
     }
 }

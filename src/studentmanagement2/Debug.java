@@ -43,7 +43,7 @@ public class Debug {
 
     public static <T> T getFromListWithID(List<?> list, String msg, String title) {
         List<String> sl = new ArrayList<String>();
-        HashMap<Integer, SearchableClass> idToClass = new HashMap<Integer, SearchableClass>();
+        HashMap<String, SearchableClass> idToClass = new HashMap<String, SearchableClass>();
         for (Object o : list) {
             SearchableClass sc = (SearchableClass) o;
             sl.add(ANSI_GREEN + "[" + sc.getID() + "]" + ANSI_RESET + " - " + o.toString());

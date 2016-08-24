@@ -1,22 +1,25 @@
 package studentmanagement2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Student extends SearchableClass {
 
-    int studentID;
+    String studentID;
 
     String name;
 
     List<Module> modules = new ArrayList<Module>();
+
+    HashMap<String, Integer> taskMarks = new HashMap<String, Integer>();
 
     public Student(String args) {
         studentID = MyReader.getArgument(args, 0, Integer.class);
         name = MyReader.getArgument(args, 1, String.class);
     }
 
-    public Student(int studentID, String name) {
+    public Student(String studentID, String name) {
         this.studentID = studentID;
         this.name = name;
     }
@@ -35,7 +38,7 @@ public class Student extends SearchableClass {
     }
 
     @Override
-    public int getID() {
+    public String getID() {
         return studentID;
     }
 }

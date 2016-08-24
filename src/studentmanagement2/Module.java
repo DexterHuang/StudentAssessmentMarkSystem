@@ -1,39 +1,28 @@
 package studentmanagement2;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Module extends SearchableClass {
 
-    int ModuleID;
+    String ModuleID;
 
     String ModuleName;
 
-    int maxPopulation;
+    List<AssessmentTask> tasks = new ArrayList<AssessmentTask>();
 
-    int population = 0;
-
-    int semester;
-
-    public Module(int ModuleID, String ModuleName, int maxPopulation, int semester) {
-        this.ModuleID = ModuleID;
-        this.ModuleName = ModuleName;
-        this.maxPopulation = maxPopulation;
-        this.semester = semester;
-    }
-
-    public Boolean isFull() {
-        return population >= maxPopulation;
-    }
-
-    public Boolean isOfferedInSemester(int semester) {
-        return this.semester == semester;
+    public Module(String id, String name) {
+        this.ModuleID = id;
+        this.ModuleName = name;
     }
 
     @Override
     public String toString() {
-        return ModuleID + " " + ModuleName + " " + semester + " " + population + " " + maxPopulation;
+        return ModuleID + " " + ModuleName;
     }
 
     @Override
-    public int getID() {
+    public String getID() {
         return ModuleID;
     }
 }
