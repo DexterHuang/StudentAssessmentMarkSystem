@@ -8,7 +8,8 @@ public class StudentManagement2 {
     public static InterfaceOption openMainMenuOption;
     public static InterfaceOption loadStudentDataOption;
     public static InterfaceOption registerModuleOption;
-    public static InterfaceOption enterStudentSpecificOption;
+    public static InterfaceOption registerModuleForStudentOption;
+    public static InterfaceOption defineTaskForModuleOption;
 
     public static Interface mainMenuInterface;
 
@@ -31,10 +32,17 @@ public class StudentManagement2 {
                 registerModule();
             }
         });
-        enterStudentSpecificOption = new InterfaceOption("Enter Student Specific", new Runnable() {
+        registerModuleForStudentOption = new InterfaceOption("Enter Student Specific", new Runnable() {
             @Override
             public void run() {
-                enterStudentSpecific();
+                registerModuleForStudent();
+            }
+        });
+
+        defineTaskForModuleOption = new InterfaceOption("Define task for module", new Runnable() {
+            @Override
+            public void run() {
+                defineTaskForModule();
             }
         });
         mainMenuInterface = new Interface("Main Menu");
@@ -60,11 +68,26 @@ public class StudentManagement2 {
             Debug.LogInfo(m.toString() + " is successfully added!");
         } else {
             Debug.LogError("Module with this code already exist");
+            retryOrReturnMainMenu(registerModuleOption);
         }
     }
 
-    public static void enterStudentSpecific() {
+    public static void registerModuleForStudent() {
         String moduleCode = Debug.getString("for the sake of simplicity, please enter a module code for all student");
+        Module module = school.getModule(moduleCode);
+        if (module != null) {
+            for (Student s : school.students) {
+                s.modules.add(module);
+                Debug.LogInfo(s.toString() + " is now enrolled in " + module.toString());
+            }
+        } else {
+            Debug.LogError("No module with such code");
+            retryOrReturnMainMenu(registerModuleForStudentOption);
+        }
+    }
+
+    public static void defineTaskForModule() {
+        Module m = Debug.getFromList(school.modules, "Please select module");
 
     }
 
