@@ -1,6 +1,8 @@
 package studentmanagement2;
 
 import java.util.List;
+import studentmanagement2.JSON.ClassSerializer;
+import studentmanagement2.JSON.JsonObject;
 
 public class StudentManagement2 {
 
@@ -14,8 +16,17 @@ public class StudentManagement2 {
     public static Interface mainMenuInterface;
 
     public static void main(String[] args) {
-        init();
-        openMainMenu();
+        School sc = new School("huehuehue");
+        Student s = new Student("a123", "dexter");
+        Student s2 = new Student("a124", "huang");
+        sc.students.add(s);
+        sc.students.add(s2);
+        String jsonString = ClassSerializer.toJSON(sc);
+        Debug.Log(jsonString);
+        Debug.Log(new JsonObject(jsonString).toString());
+        School nsc = ClassSerializer.fromJSON(school.getClass(), jsonString);
+        //init();
+        //openMainMenu();
     }
 
     public static void init() {

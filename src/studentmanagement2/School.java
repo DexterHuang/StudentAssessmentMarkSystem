@@ -15,6 +15,10 @@ public class School extends SearchableClass {
 
     List<Student> students = new ArrayList<Student>();
 
+    public School() {
+
+    }
+
     public School(String schoolName) {
         this.schoolName = schoolName;
     }

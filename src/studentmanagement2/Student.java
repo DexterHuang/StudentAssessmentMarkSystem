@@ -14,6 +14,10 @@ public class Student extends SearchableClass {
 
     HashMap<String, Integer> taskMarks = new HashMap<String, Integer>();
 
+    public Student() {
+
+    }
+
     public Student(String args) {
         studentID = MyReader.getArgument(args, 0, Integer.class);
         name = MyReader.getArgument(args, 1, String.class);
