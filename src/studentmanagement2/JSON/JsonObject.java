@@ -32,7 +32,7 @@ public class JsonObject {
     }
 
     public List<?> getList(String name) {
-
+        return null;
     }
 
     @Override
