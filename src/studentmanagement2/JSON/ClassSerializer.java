@@ -6,11 +6,14 @@
 package studentmanagement2.JSON;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import studentmanagement2.Debug;
 
 /**
  *
@@ -52,18 +55,31 @@ public class ClassSerializer {
                 JsonObject jo = new JsonObject(jsonString);
                 Object value = jo.getValue(field.getName());
                 Object co = field.get(o);
+                Class dc = field.getDeclaringClass();
                 if (value != null) {
                     if (co instanceof List) {
-                        List<?> l = (List<?>) co;
-
-                        field.set(o, jo.getList(field.getName()));
-                    } else if (o instanceof JsonObject) {
+                        ParameterizedType listType = (ParameterizedType) field.getGenericType();
+                        Class c = (Class) listType.getActualTypeArguments()[0];
+                        field.set(o, jo.getList(c, field.getName()));
+                    } else if (co instanceof JsonObject) {
                         JsonObject inner = (JsonObject) o;
                         value = fromJSON(field.getDeclaringClass(), inner.toString());
                         field.set(o, value);
+                    } else if (co instanceof HashMap) {
+                        ParameterizedType listType = (ParameterizedType) field.getGenericType();
+                        Class c = (Class) listType.getActualTypeArguments()[0];
+                        Class c2 = (Class) listType.getActualTypeArguments()[0];
+                        Debug.Log("hashmap: " + c + "   " + c2);
+                    } else if (co instanceof String) {
+                        field.set(o, value.toString());
                     } else {
-                        field.set(o, value);
+                        //Debug.Log("setting " + field.getName() + "   " + co.getClass() + " to " + value.toString());
+                        field.set(o, value.toString());
                     }
+                } else if (co instanceof List) {
+                    field.set(o, new ArrayList<Object>());
+                } else if (co instanceof HashMap) {
+                    field.set(o, new HashMap<Object, Object>());
                 }
             }
         } catch (InstantiationException ex) {

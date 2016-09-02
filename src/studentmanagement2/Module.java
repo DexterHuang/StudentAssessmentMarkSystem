@@ -9,11 +9,14 @@ public class Module extends SearchableClass {
 
     String ModuleName;
 
-    List<AssessmentTask> tasks = new ArrayList<AssessmentTask>();
+    List<String> taskIds = new ArrayList<String>();
 
     public Module(String id, String name) {
         this.ModuleID = id;
         this.ModuleName = name;
+        taskIds.add("Null");
+        taskIds.add("Null");
+        taskIds.add("Null");
     }
 
     @Override

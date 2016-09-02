@@ -27,6 +27,7 @@ public class dataReader {
                 Debug.LogError("error while pharsing data: " + e.getLocalizedMessage());
             }
         }
+
     }
 
     public <T> T getValue(String key) {

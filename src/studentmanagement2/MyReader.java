@@ -23,13 +23,15 @@ public class MyReader {
     public static List<String> getLines(String filePath) {
         List<String> list = new ArrayList<String>();
         File file = new File(filePath);
-        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                list.add(line);
+        if (file.exists()) {
+            try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+                String line;
+                while ((line = br.readLine()) != null) {
+                    list.add(line);
+                }
+            } catch (Exception e) {
+                Debug.LogError("Error druing readline operation: " + e.getLocalizedMessage());
             }
-        } catch (Exception e) {
-            Debug.LogError("Error druing readline operation: " + e.getLocalizedMessage());
         }
         return list;
     }

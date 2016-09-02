@@ -1,6 +1,6 @@
 package studentmanagement2;
 
-public class AssessmentTask {
+public class AssessmentTask extends SearchableClass {
 
     String id;
 
@@ -15,5 +15,10 @@ public class AssessmentTask {
         this.weight = weight;
         this.fullMarks = fullMarks;
         this.description = description;
+    }
+
+    @Override
+    public String toString() {
+        return id + " " + description;
     }
 }

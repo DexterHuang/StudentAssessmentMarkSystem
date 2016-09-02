@@ -53,13 +53,13 @@ public class Debug {
         des.add(msg);
         des.add("Please choose an object from the list below(Enter the " + ANSI_GREEN + "[Index]" + ANSI_RESET + ")");
         Log(generateBoxString(sl, title, des));
-        int i = getInt("Please enter the Index of the object you wish to select or type '-1' to return to main menu");
-        if (i < 0) {
+        String s = getString("Please enter the Index of the object you wish to select or type '-1' to return to main menu");
+        if (s.equalsIgnoreCase("-1")) {
             StudentManagement2.openMainMenu();
             return null;
         }
-        if (idToClass.containsKey(i)) {
-            return (T) idToClass.get(i);
+        if (idToClass.containsKey(s)) {
+            return (T) idToClass.get(s);
         } else {
             Debug.Log("The ID you have entered does not exist, please try again");
             return getFromListWithID(list, msg);

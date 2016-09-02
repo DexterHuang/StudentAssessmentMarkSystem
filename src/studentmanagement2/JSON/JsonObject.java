@@ -6,7 +6,9 @@
 package studentmanagement2.JSON;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import studentmanagement2.Debug;
 
 /**
  *
@@ -31,7 +33,19 @@ public class JsonObject {
         return null;
     }
 
-    public List<?> getList(String name) {
+    public List<?> getList(Class Class, String name) {
+        Object o = getValue(name);
+        if (o instanceof Collection) {
+            List<Object> l = (ArrayList<Object>) o;
+            List<Object> ll = new ArrayList<Object>();
+            for (Object jo : l) {
+                Object no = ClassSerializer.fromJSON(Class, jo.toString());
+                ll.add(no);
+            }
+            return ll;
+        } else if (o instanceof JsonObject) {
+            return new ArrayList<Class>();
+        }
         return null;
     }
 
@@ -98,7 +112,7 @@ public class JsonObject {
                     //Debug.Log("key: " + key + ", value: " + value);
                 }
             } catch (Exception e) {
-                //Debug.LogError("Error trying to parse " + column + " to jasonObject");
+                Debug.LogError("Error trying to parse " + column + " to jasonObject");
                 e.printStackTrace();
             }
         }
@@ -166,4 +180,7 @@ public class JsonObject {
         return str;
     }
 
+    private List<JsonObject> toList() {
+        return new ArrayList<JsonObject>();
+    }
 }

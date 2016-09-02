@@ -15,8 +15,14 @@ public class School extends SearchableClass {
 
     List<Student> students = new ArrayList<Student>();
 
-    public School() {
+    List<AssessmentTask> tasks = new ArrayList<AssessmentTask>();
 
+    public School() {
+        modules = new ArrayList<Module>();
+
+        students = new ArrayList<Student>();
+
+        tasks = new ArrayList<AssessmentTask>();
     }
 
     public School(String schoolName) {
@@ -31,9 +37,27 @@ public class School extends SearchableClass {
         modules.add(module);
     }
 
+    public boolean addTask(AssessmentTask task) {
+        if (getTask(task.getID()) == null) {
+            tasks.add(task);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public AssessmentTask getTask(String id) {
+        for (AssessmentTask task : tasks) {
+            if (task.id.equalsIgnoreCase(id)) {
+                return task;
+            }
+        }
+        return null;
+    }
+
     public boolean removeStudent(String studentID) {
         for (Student s : students) {
-            if (s.studentID == studentID) {
+            if (s.studentID == null ? studentID == null : s.studentID.equals(studentID)) {
                 students.remove(s);
                 return true;
             }
@@ -43,7 +67,7 @@ public class School extends SearchableClass {
 
     public boolean removeModule(String moduleID) {
         for (Module m : modules) {
-            if (m.ModuleID == moduleID) {
+            if (m.ModuleID == null ? moduleID == null : m.ModuleID.equals(moduleID)) {
                 modules.remove(m);
                 return true;
             }
@@ -53,7 +77,7 @@ public class School extends SearchableClass {
 
     public Student getStudent(String id) {
         for (Student s : students) {
-            if (s.studentID == id) {
+            if (s.studentID == null ? id == null : s.studentID.equals(id)) {
                 return s;
             }
         }
@@ -62,7 +86,7 @@ public class School extends SearchableClass {
 
     public Module getModule(String id) {
         for (Module m : modules) {
-            if (m.ModuleID == id) {
+            if (m.ModuleID == null ? id == null : m.ModuleID.equals(id)) {
                 return m;
             }
         }

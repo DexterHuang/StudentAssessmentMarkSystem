@@ -19,7 +19,7 @@ public class Student extends SearchableClass {
     }
 
     public Student(String args) {
-        studentID = MyReader.getArgument(args, 0, Integer.class);
+        studentID = MyReader.getArgument(args, 0, String.class);
         name = MyReader.getArgument(args, 1, String.class);
     }
 
