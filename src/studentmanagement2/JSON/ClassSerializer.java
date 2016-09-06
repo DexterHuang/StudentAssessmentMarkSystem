@@ -61,6 +61,7 @@ public class ClassSerializer {
                         ParameterizedType listType = (ParameterizedType) field.getGenericType();
                         Class c = (Class) listType.getActualTypeArguments()[0];
                         field.set(o, jo.getList(c, field.getName()));
+                        //Debug.LogInfo(field.getName() + "'s " + co.toString() + " array to " + jo.getList(c, field.getName()) + "   json: " + value.toString());
                     } else if (co instanceof JsonObject) {
                         JsonObject inner = (JsonObject) o;
                         value = fromJSON(field.getDeclaringClass(), inner.toString());
@@ -68,18 +69,28 @@ public class ClassSerializer {
                     } else if (co instanceof HashMap) {
                         ParameterizedType listType = (ParameterizedType) field.getGenericType();
                         Class c = (Class) listType.getActualTypeArguments()[0];
-                        Class c2 = (Class) listType.getActualTypeArguments()[0];
-                        Debug.Log("hashmap: " + c + "   " + c2);
+                        Class c2 = (Class) listType.getActualTypeArguments()[1];
+                        Debug.Log(field.getName() + " is hashmap: " + c + "   " + c2);
+                        field.set(o, jo.getHashMap(c, c2, field.getName()));
                     } else if (co instanceof String) {
                         field.set(o, value.toString());
+                    } else if (co instanceof Float) {
+                        field.set(o, Float.parseFloat(value.toString()));
+                    } else if (co instanceof Double) {
+                        field.set(o, Double.parseDouble(value.toString()));
+                    } else if (co instanceof Integer) {
+                        field.set(o, Integer.parseInt(value.toString()));
                     } else {
-                        //Debug.Log("setting " + field.getName() + "   " + co.getClass() + " to " + value.toString());
                         field.set(o, value.toString());
                     }
                 } else if (co instanceof List) {
+                    Debug.LogError("cannot find " + field.getName());
                     field.set(o, new ArrayList<Object>());
                 } else if (co instanceof HashMap) {
+                    Debug.LogError("cannot find " + field.getName());
                     field.set(o, new HashMap<Object, Object>());
+                } else {
+                    Debug.LogError("cannot find " + field.getName());
                 }
             }
         } catch (InstantiationException ex) {
@@ -117,6 +128,8 @@ public class ClassSerializer {
             return collectionToJSON(c);
         } else if (object instanceof JsonObject || object instanceof KeyPairValue) {
             return object.toString();
+        } else if (object == null) {
+            return "Null";
         } else {
             return toJSON(object);
         }

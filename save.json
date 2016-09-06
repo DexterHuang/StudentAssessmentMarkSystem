@@ -1,0 +1,67 @@
+{
+    schoolName: "Bogus",
+    modules: {},
+    students: {
+        {
+            studentID: "201607001",
+            name: "Michael_Tan",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607002",
+            name: "Richard_Lee_Wai_Yong",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607003",
+            name: "Jean_Yip",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607004",
+            name: "Mark_Lee",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607005",
+            name: "Linda_Wong",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607006",
+            name: "Karen_Tan",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607007",
+            name: "James_Bond",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607008",
+            name: "Sandra_Smith",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607009",
+            name: "Paul_Garcia",
+            modules: {},
+            taskMarks: {}
+        },
+        {
+            studentID: "201607010",
+            name: "Donald_Lim",
+            modules: {},
+            taskMarks: {}
+        }
+    },
+    tasks: {}
+}

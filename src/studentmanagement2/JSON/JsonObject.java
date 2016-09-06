@@ -7,6 +7,7 @@ package studentmanagement2.JSON;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import studentmanagement2.Debug;
 
@@ -22,6 +23,8 @@ public class JsonObject {
         jsonString = jsonString.trim();
         // Debug.LogInfo("trying to parse: " + jsonString);
         pairs = getKeyPairValues(jsonString);
+        if (pairs.size() <= 0) {
+        }
     }
 
     public Object getValue(String key) {
@@ -35,23 +38,26 @@ public class JsonObject {
 
     public List<?> getList(Class Class, String name) {
         Object o = getValue(name);
+
         if (o instanceof Collection) {
             List<Object> l = (ArrayList<Object>) o;
             List<Object> ll = new ArrayList<Object>();
             for (Object jo : l) {
-                Object no = ClassSerializer.fromJSON(Class, jo.toString());
-                ll.add(no);
+                if (Class.getName().contains("String")) {
+                    String str = (String) jo;
+                    str = (String) stringToObject(str);;
+                    ll.add(str);
+                } else {
+                    Object no = ClassSerializer.fromJSON(Class, jo.toString());
+                    //Debug.Log(jo.toString() + "  to  " + Class.getName() + "  RESULT : " + no);
+                    ll.add(no);
+                }
             }
             return ll;
-        } else if (o instanceof JsonObject) {
-            return new ArrayList<Class>();
+        } else {
+            Debug.LogError(name + " is not a collection it is " + o.getClass().toString());
         }
-        return null;
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone(); //To change body of generated methods, choose Tools | Templates.
+        return new ArrayList<Class>();
     }
 
     public JsonObject() {
@@ -89,28 +95,15 @@ public class JsonObject {
             try {
                 //  Debug.Log(Debug.ANSI_GREEN + "parsing column: " + column + Debug.ANSI_RESET);
                 int firstColumn = column.indexOf(": ");
+                if (firstColumn < 0) {
+                    continue;
+                }
                 int end = column.length();
                 String key = column.substring(0, firstColumn).trim();
+                key = (String) stringToObject(key);
                 String value = column.substring(firstColumn + 1, end).trim();
-                if (value.startsWith("{ ")) {
-                    //Debug.LogInfo("nested value: " + value);
-                    List<String> c = getColumns(value);
-                    //IS LIST
-                    if (c.size() > 0) {
-                        if (c.get(0).startsWith("{")) {
-                            List<JsonObject> jl = new ArrayList<JsonObject>();
-                            for (String cs : c) {
-                                jl.add(new JsonObject(cs));
-                            }
-                            pairs.add(new KeyPairValue(key, jl));
-                        }
-                    } else {
-                        pairs.add(new KeyPairValue(key, new JsonObject(value + "")));
-                    }
-                } else {
-                    pairs.add(new KeyPairValue(key, stringToObject(value)));
-                    //Debug.Log("key: " + key + ", value: " + value);
-                }
+                //Debug.LogInfo(key + "  :  " + value + " ==> " + stringToObject(value).toString());
+                pairs.add(new KeyPairValue(key, stringToObject(value)));
             } catch (Exception e) {
                 Debug.LogError("Error trying to parse " + column + " to jasonObject");
                 e.printStackTrace();
@@ -159,8 +152,32 @@ public class JsonObject {
 
     private Object stringToObject(String str) {
         str.trim();
-        if (str.startsWith("\"") && str.endsWith("\"")) {
-            return str.substring(1, str.length() - 1);
+        if (str.startsWith("{") && str.contains(":")) {
+            List<Object> ol = new ArrayList<Object>();
+            List<String> l = getColumns(str);
+            if (l.get(0).startsWith("{")) {
+                for (String s : l) {
+                    //Debug.LogInfo(s);
+                    Object ns = stringToObject(s);
+                    ol.add(ns);
+                }
+                return ol;
+            }
+            return new JsonObject(str);
+
+        } else if (str.startsWith("{")) {
+            List<String> l = new ArrayList<String>();
+            for (String s : getColumns(str)) {
+                l.add(s.trim());
+            }
+            return l;
+        } else if (str.startsWith("\"")) {
+            str = str.replace("}", "");
+            str.trim();
+            while (str.startsWith("\"") && str.endsWith("\"")) {
+                str.trim();
+                str = str.substring(1, str.length() - 1);
+            }
         }
         return str;
     }
@@ -180,7 +197,21 @@ public class JsonObject {
         return str;
     }
 
-    private List<JsonObject> toList() {
-        return new ArrayList<JsonObject>();
+    public HashMap<?, ?> getHashMap(Class c, Class c2, String name) {
+        JsonObject jo = (JsonObject) getValue(name);
+        HashMap<Object, Object> map = new HashMap<Object, Object>();
+        for (KeyPairValue pair : jo.pairs) {
+            map.put(pair.getKey(), parseObject(c2, pair.getValue()));
+        }
+        return (HashMap<?, ?>) map;
+    }
+
+    public Object parseObject(Class<?> c, String str) {
+        Debug.LogInfo(c.getName() + "   " + str);
+        if (c == Integer.class) {
+            return Integer.parseInt(str);
+        }
+
+        return str;
     }
 }
