@@ -31,6 +31,6 @@ public class Interface {
         for (int i = 1; i <= 10; i++) {
             Debug.Log("");
         }
-        return Debug.getFromList(options, title, header);
+        return Debug.getFromList(options, title, new ArrayList<String>(header));
     }
 }

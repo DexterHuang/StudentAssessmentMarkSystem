@@ -19,6 +19,26 @@ public class Module extends SearchableClass {
         taskIds.add("Null");
     }
 
+    public Module() {
+
+    }
+
+    public float getWeightedRatio(String taskID) {
+        if (taskIds.contains(taskID)) {
+            float total = 0;
+            AssessmentTask mainTask = StudentManagement2.school.getTask(taskID);
+            for (String id : taskIds) {
+                AssessmentTask task = StudentManagement2.school.getTask(id);
+                if (task != null) {
+                    total += task.weight;
+                }
+            }
+            return (float) mainTask.weight / total;
+        } else {
+            return 0;
+        }
+    }
+
     @Override
     public String toString() {
         return ModuleID + " " + ModuleName;

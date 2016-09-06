@@ -23,6 +23,8 @@ public class StudentManagement2 {
     public static InterfaceOption defineTaskForModuleOption;
     public static InterfaceOption defineTaskOption;
     public static InterfaceOption saveAndExitOption;
+    public static InterfaceOption inputStudentMarksOption;
+    public static InterfaceOption showMarksOption;
     public static Interface mainMenuInterface;
 
     public static void main(String[] args) {
@@ -97,6 +99,19 @@ public class StudentManagement2 {
                 saveAndExit();
             }
         });
+
+        inputStudentMarksOption = new InterfaceOption("Input Student Marks", new Runnable() {
+            @Override
+            public void run() {
+                inputStudentMarks();
+            }
+        });
+        showMarksOption = new InterfaceOption("Show Marks", new Runnable() {
+            @Override
+            public void run() {
+                showMarks();
+            }
+        });
         mainMenuInterface = new Interface("Main Menu");
         mainMenuInterface.addOption(loadStudentDataOption);
         mainMenuInterface.addOption(listStudentOption);
@@ -104,6 +119,8 @@ public class StudentManagement2 {
         mainMenuInterface.addOption(registerModuleForStudentOption);
         mainMenuInterface.addOption(defineTaskOption);
         mainMenuInterface.addOption(defineTaskForModuleOption);
+        mainMenuInterface.addOption(inputStudentMarksOption);
+        mainMenuInterface.addOption(showMarksOption);
         mainMenuInterface.addOption(saveAndExitOption);
     }
 
@@ -136,7 +153,7 @@ public class StudentManagement2 {
     public static void registerModuleForStudent() {
         Module module = Debug.getFromListWithID(school.modules, "for the sake of simplicity, please enter a module code for all student");
         for (Student s : school.students) {
-            s.modules.add(module);
+            s.modules.add(module.ModuleID);
             Debug.LogInfo(s.toString() + " is now enrolled in " + module.toString());
         }
         pauseAndGoMainMenu();
@@ -144,11 +161,12 @@ public class StudentManagement2 {
 
     public static void defineTask() {
         String id = Debug.getString("Please enter ID for task.");
+        String title = Debug.getString("Please enter title");
         float weight = Debug.getInt("Please enter weight.");
         int fullMark = Debug.getInt("Please enter the full mark of this task.");
         String description = Debug.getString("Please enter description for this task.");
 
-        AssessmentTask task = new AssessmentTask(id, weight, fullMark, description);
+        AssessmentTask task = new AssessmentTask(id, title, weight, fullMark, description);
         if (school.addTask(task) == false) {
             Debug.LogError("There is already a task with this ID!");
             retryOrReturnMainMenu(defineTaskOption);
@@ -171,6 +189,69 @@ public class StudentManagement2 {
 
     public static void listStudents() {
         Debug.Log(Debug.generateBoxStringFromSearchable(school.students, "Student List", "Here is the list of students"));
+        pauseAndGoMainMenu();
+    }
+
+    public static void inputStudentMarks() {
+        int i = Debug.getInt("Do you want to enter student's mark, or use randomly generated marks? (manual input -> 0, random -> 1)");
+        for (Student student : school.students) {
+            for (String moduleID : student.modules) {
+                Module module = school.getModule(moduleID);
+                if (module != null) {
+                    for (String taskID : module.taskIds) {
+                        AssessmentTask task = school.getTask(taskID);
+                        if (task != null) {
+                            if (i > 0) {
+                                int r = (int) (Math.random() * task.fullMarks);
+                                student.taskMarks.put(taskID, r);
+                                Debug.LogInfo(student.toString() + "'s " + task.toString() + " mark has been set to " + r);
+                            } else {
+                                int mark = Debug.getInt("Please enter " + student.name + "'s " + task.title + " mark");
+                                student.taskMarks.put(taskID, mark);
+                                Debug.LogInfo(student.toString() + "'s " + task.toString() + " mark has been set to " + mark);
+                            }
+                        } else {
+                            Debug.LogError("Could not find task: " + taskID);
+                        }
+                    }
+                } else {
+                    Debug.LogError("Could not find module: " + moduleID);
+                }
+            }
+        }
+        pauseAndGoMainMenu();
+    }
+
+    public static void showMarks() {
+
+        String seperator = "\t";
+        Module m = Debug.getFromList(school.modules, "Please select the module you would like to view");
+        List<SortableData> dataList = new ArrayList<SortableData>();
+        for (Student s : school.students) {
+            if (s.modules.contains(m.ModuleID)) {
+                dataList.add(s.getMarkSortableData(m));
+            }
+        }
+        int i = Debug.getInt("do you want to sort the list? (0 -> No, 1 -> Yes)", 0, 1);
+        SortableData[] dataArray = dataList.toArray(new SortableData[dataList.size()]);
+        if (i >= 1) {
+            SortingHandler sh = new SortingHandler(dataList);
+            dataArray = sh.sort();
+        }
+        List<String> stringList = new ArrayList<String>();
+        String firstLine = "Module" + seperator + "StudentID" + seperator;
+        for (String taskId : m.taskIds) {
+            firstLine += taskId + seperator;
+        }
+        stringList.add(firstLine);
+
+        for (SortableData sd : dataArray) {
+            stringList.add(sd.data.toString());
+        }
+
+        for (String s : stringList) {
+            Debug.Log(s);
+        }
         pauseAndGoMainMenu();
     }
 

@@ -10,7 +10,7 @@ public class Student extends SearchableClass {
 
     String name;
 
-    List<Module> modules = new ArrayList<Module>();
+    List<String> modules = new ArrayList<String>();
 
     HashMap<String, Integer> taskMarks = new HashMap<String, Integer>();
 
@@ -38,11 +38,43 @@ public class Student extends SearchableClass {
     }
 
     void takeModule(Module module) {
-        modules.add(module);
+        modules.add(module.getID());
     }
 
     @Override
     public String getID() {
         return studentID;
+    }
+
+    public int getTaskMark(String taskID) {
+
+        if (taskMarks.containsKey(taskID)) {
+            return taskMarks.get(taskID);
+        }
+        return -1;
+    }
+
+    public SortableData getMarkSortableData(Module module) {
+        String seperator = "\t";
+        String s = module.ModuleID + seperator + studentID + seperator + name + seperator + seperator;
+        float weightedValue = 0;
+        for (String taskID : module.taskIds) {
+            AssessmentTask task = StudentManagement2.school.getTask(taskID);
+            if (task != null) {
+                int mark = getTaskMark(taskID);
+                if (mark >= 0) {
+                    float percent = (float) mark / task.fullMarks * 100;
+                    weightedValue += percent * module.getWeightedRatio(taskID);
+                    s += (int) percent + seperator;
+                } else {
+                    s += "No Data    ";
+                }
+            } else {
+                Debug.LogError("Task with ID " + taskID + " was not found!");
+            }
+        }
+        s += weightedValue;
+        SortableData sd = new SortableData(s, (int) weightedValue);
+        return sd;
     }
 }
