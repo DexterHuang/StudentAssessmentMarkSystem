@@ -1,7 +1,5 @@
 package studentmanagement2;
 
-import studentmanagement2.SortingHandler.SortableData;
-import studentmanagement2.SortingHandler.SortingHandler;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -13,6 +11,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import studentmanagement2.JSON.ClassSerializer;
 import studentmanagement2.JSON.JsonObject;
+import studentmanagement2.SortingHandler.SortableData;
+import studentmanagement2.SortingHandler.SortingHandler;
 
 public class StudentManagement2 {
 
@@ -24,9 +24,15 @@ public class StudentManagement2 {
     public static InterfaceOption registerModuleForStudentOption;
     public static InterfaceOption defineTaskForModuleOption;
     public static InterfaceOption defineTaskOption;
+    public static InterfaceOption removeTaskOption;
     public static InterfaceOption saveAndExitOption;
     public static InterfaceOption inputStudentMarksOption;
     public static InterfaceOption showMarksOption;
+    public static InterfaceOption showTasksOption;
+    public static InterfaceOption openModuleMatterInterfaceOption;
+    public static InterfaceOption openTaskMatterInterfaceOption;
+    public static Interface moduleMatterInterface;
+    public static Interface taskMatterInterface;
     public static Interface mainMenuInterface;
 
     public static void main(String[] args) {
@@ -50,6 +56,8 @@ public class StudentManagement2 {
     }
 
     public static void init() {
+        moduleMatterInterface = new Interface("Module Matter");
+        taskMatterInterface = new Interface("Task Matter");
         openMainMenuOption = new InterfaceOption("Go to Main Menu", new Runnable() {
             @Override
             public void run() {
@@ -82,18 +90,25 @@ public class StudentManagement2 {
             }
         });
 
-        defineTaskForModuleOption = new InterfaceOption("Define task for module", new Runnable() {
+        defineTaskForModuleOption = new InterfaceOption("Edit Module Tasks", new Runnable() {
             @Override
             public void run() {
                 defineTaskForModule();
             }
         });
-        defineTaskOption = new InterfaceOption("Define Task", new Runnable() {
+        defineTaskOption = new InterfaceOption("Create Task", new Runnable() {
             @Override
             public void run() {
                 defineTask();
             }
 
+        });
+
+        removeTaskOption = new InterfaceOption("Remove Task", new Runnable() {
+            @Override
+            public void run() {
+                removeTask();
+            }
         });
         saveAndExitOption = new InterfaceOption("Save and Exit", new Runnable() {
             @Override
@@ -114,15 +129,55 @@ public class StudentManagement2 {
                 showMarks();
             }
         });
+        showTasksOption = new InterfaceOption("Show Tasks", new Runnable() {
+            @Override
+            public void run() {
+                showTasks();
+            }
+        });
+
+        openModuleMatterInterfaceOption = new InterfaceOption("Module Matters", new Runnable() {
+            @Override
+            public void run() {
+                moduleMatterInterface.showAndGetOption().run();
+            }
+        });
+
+        openTaskMatterInterfaceOption = new InterfaceOption("Task Matters", new Runnable() {
+            @Override
+            public void run() {
+                taskMatterInterface.showAndGetOption().run();
+            }
+        });
         mainMenuInterface = new Interface("Main Menu");
+
         mainMenuInterface.addOption(loadStudentDataOption);
+
         mainMenuInterface.addOption(listStudentOption);
-        mainMenuInterface.addOption(registerModuleOption);
-        mainMenuInterface.addOption(registerModuleForStudentOption);
-        mainMenuInterface.addOption(defineTaskOption);
-        mainMenuInterface.addOption(defineTaskForModuleOption);
-        mainMenuInterface.addOption(inputStudentMarksOption);
-        mainMenuInterface.addOption(showMarksOption);
+
+        //Module
+        mainMenuInterface.addOption(openModuleMatterInterfaceOption);
+
+        moduleMatterInterface.addOption(registerModuleOption);
+
+        moduleMatterInterface.addOption(registerModuleForStudentOption);
+
+        moduleMatterInterface.addOption(openMainMenuOption);
+        //Task
+        mainMenuInterface.addOption(openTaskMatterInterfaceOption);
+
+        taskMatterInterface.addOption(defineTaskOption);
+
+        taskMatterInterface.addOption(defineTaskForModuleOption);
+
+        taskMatterInterface.addOption(inputStudentMarksOption);
+
+        taskMatterInterface.addOption(showMarksOption);
+
+        taskMatterInterface.addOption(showTasksOption);
+
+        taskMatterInterface.addOption(openMainMenuOption);
+
         mainMenuInterface.addOption(saveAndExitOption);
     }
 
@@ -237,6 +292,7 @@ public class StudentManagement2 {
         int i = Debug.getInt("do you want to sort the list? (0 -> No, 1 -> Yes)", 0, 1);
         SortableData[] dataArray = dataList.toArray(new SortableData[dataList.size()]);
         if (i >= 1) {
+            Debug.LogInfo("sorted!");
             SortingHandler sh = new SortingHandler(dataList);
             dataArray = sh.sort();
         }
@@ -254,7 +310,34 @@ public class StudentManagement2 {
         for (String s : stringList) {
             Debug.Log(s);
         }
+
+        int save = Debug.getInt("Do you want to save it to file? (No ==> 0, Yes ==> 1)", 0, 1);
+        if (save > 0) {
+            String name = "MarkExport-" + m.ModuleName + ".txt";
+            saveListToFile(stringList, name);
+            Debug.LogInfo("mark sheet has been save to " + name);
+        }
         pauseAndGoMainMenu();
+    }
+
+    public static void showTasks() {
+        for (AssessmentTask task : school.tasks) {
+            Debug.Log("ID: " + task.id);
+            Debug.Log("Title: " + task.title);
+            Debug.Log("Full mark: " + task.fullMarks);
+            Debug.Log("Weight: " + task.weight);
+            Debug.Log("Description: " + task.description);
+            Debug.Log("==================================");
+        }
+        pauseAndGoMainMenu();
+    }
+
+    public static void removeTask() {
+        AssessmentTask task = Debug.getFromList(school.tasks, "Select the task you want to remove");
+        school.removeTask(task);
+        Debug.LogInfo(task.toString() + " has been removed!");
+        pauseAndGoMainMenu();
+
     }
 
     public static void saveAndExit() {
@@ -292,15 +375,20 @@ public class StudentManagement2 {
     }
 
     public static void save() {
+        String jsonString = ClassSerializer.toJSON(school);
+        List<String> lines = new ArrayList<String>();
+        lines.add(jsonString);
+        saveListToFile(lines, "save.json");
+
+    }
+
+    public static void saveListToFile(List<String> lines, String path) {
+        Path file = Paths.get(path);
         try {
-            String jsonString = ClassSerializer.toJSON(school);
-            List<String> lines = new ArrayList<String>();
-            lines.add(jsonString);
-            Path file = Paths.get("save.json");
             Files.write(file, lines, Charset.forName("UTF-8"));
         } catch (IOException ex) {
             Logger.getLogger(StudentManagement2.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
 
+    }
 }

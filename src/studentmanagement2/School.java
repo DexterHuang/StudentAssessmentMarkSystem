@@ -104,4 +104,8 @@ public class School extends SearchableClass {
             Debug.Log(s.toString());
         }
     }
+
+    void removeTask(AssessmentTask task) {
+        this.tasks.remove(task);
+    }
 }
