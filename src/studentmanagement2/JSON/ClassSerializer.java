@@ -70,8 +70,9 @@ public class ClassSerializer {
                         ParameterizedType listType = (ParameterizedType) field.getGenericType();
                         Class c = (Class) listType.getActualTypeArguments()[0];
                         Class c2 = (Class) listType.getActualTypeArguments()[1];
-                        Debug.Log(field.getName() + " is hashmap: " + c + "   " + c2);
-                        field.set(o, jo.getHashMap(c, c2, field.getName()));
+                        HashMap<?, ?> map = jo.getHashMap(c, c2, field.getName());
+                        field.set(o, map);
+                        //Debug.Log(field.getName() + " is hashmap: " + map.toString());
                     } else if (co instanceof String) {
                         field.set(o, value.toString());
                     } else if (co instanceof Float) {

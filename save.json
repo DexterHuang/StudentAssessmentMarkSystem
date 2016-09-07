@@ -1,67 +1,169 @@
 {
     schoolName: "Bogus",
-    modules: {},
+    modules: {
+        {
+            ModuleID: "210CT",
+            ModuleName: "CS",
+            taskIds: {
+                "210CT1",
+                "210CT2",
+                "210CT3"
+            }
+        }
+    },
     students: {
         {
             studentID: "201607001",
             name: "Michael_Tan",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 42,
+                "210CT3": 57,
+                "210CT2": 45,
+            }
         },
         {
             studentID: "201607002",
-            name: "Richard_Lee_Wai_Yong",
-            modules: {},
-            taskMarks: {}
+            name: "Lee_Wai_Yong",
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 76,
+                "210CT3": 46,
+                "210CT2": 95,
+            }
         },
         {
             studentID: "201607003",
             name: "Jean_Yip",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 39,
+                "210CT3": 47,
+                "210CT2": 42,
+            }
         },
         {
             studentID: "201607004",
             name: "Mark_Lee",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 80,
+                "210CT3": 31,
+                "210CT2": 26,
+            }
         },
         {
             studentID: "201607005",
             name: "Linda_Wong",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 84,
+                "210CT3": 72,
+                "210CT2": 3,
+            }
         },
         {
             studentID: "201607006",
             name: "Karen_Tan",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 77,
+                "210CT3": 36,
+                "210CT2": 66,
+            }
         },
         {
             studentID: "201607007",
             name: "James_Bond",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 70,
+                "210CT3": 32,
+                "210CT2": 8,
+            }
         },
         {
             studentID: "201607008",
             name: "Sandra_Smith",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 60,
+                "210CT3": 68,
+                "210CT2": 97,
+            }
         },
         {
             studentID: "201607009",
             name: "Paul_Garcia",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 37,
+                "210CT3": 72,
+                "210CT2": 72,
+            }
         },
         {
             studentID: "201607010",
             name: "Donald_Lim",
-            modules: {},
-            taskMarks: {}
+            modules: {
+                "210CT",
+                "210CT"
+            },
+            taskMarks: {
+                "210CT1": 32,
+                "210CT3": 10,
+                "210CT2": 36,
+            }
         }
     },
-    tasks: {}
+    tasks: {
+        {
+            id: "210CT1",
+            title: "Assignment",
+            weight: 25.0,
+            fullMarks: 100,
+            description: "des"
+        },
+        {
+            id: "210CT2",
+            title: "Assignment",
+            weight: 25.0,
+            fullMarks: 100,
+            description: "Description"
+        },
+        {
+            id: "210CT3",
+            title: "Assignment",
+            weight: 50.0,
+            fullMarks: 100,
+            description: "Description"
+        }
+    }
 }

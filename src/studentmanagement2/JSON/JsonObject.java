@@ -198,16 +198,19 @@ public class JsonObject {
     }
 
     public HashMap<?, ?> getHashMap(Class c, Class c2, String name) {
-        JsonObject jo = (JsonObject) getValue(name);
-        HashMap<Object, Object> map = new HashMap<Object, Object>();
-        for (KeyPairValue pair : jo.pairs) {
-            map.put(pair.getKey(), parseObject(c2, pair.getValue()));
+        if (getValue(name) instanceof JsonObject) {
+            JsonObject jo = (JsonObject) getValue(name);
+            HashMap<Object, Object> map = new HashMap<Object, Object>();
+            for (KeyPairValue pair : jo.pairs) {
+                map.put(pair.getKey(), parseObject(c2, pair.getValue()));
+            }
+            return (HashMap<?, ?>) map;
         }
-        return (HashMap<?, ?>) map;
+        return (HashMap<?, ?>) new HashMap<>();
+
     }
 
     public Object parseObject(Class<?> c, String str) {
-        Debug.LogInfo(c.getName() + "   " + str);
         if (c == Integer.class) {
             return Integer.parseInt(str);
         }
